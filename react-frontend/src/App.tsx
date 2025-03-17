@@ -1,54 +1,4 @@
-// // SORT DATA USING TAG KEYS (VERSION 2.1)
-// import React, { useState } from "react";
-// import {
-//   BrowserRouter as Router,
-//   Routes,
-//   Route,
-//   Navigate,
-// } from "react-router-dom";
-// import Sidebar from "./components/sidebar/Sidebar";
-// import GBMap from "./components/map/Map";
-// import LiveMeter from "./components/livemeter/LiveMeter";
-// import Graph from "./components/graph/GraphPlot";
-// import ButtonServer from "./components/download/Download";
-// import Events from "./components/events/Events";
-// import "./App.css";
-
-// const App: React.FC = () => {
-//   const [selectedLocation, setSelectedLocation] =
-//     useState<string>("manchester");
-
-//   return (
-//     <Router>
-//       <div className="app-container">
-//         <Sidebar />
-//         <div className="content-layout">
-//           <GBMap setSelectedLocation={setSelectedLocation} />
-//           <Routes>
-//             <Route path="/" element={<Navigate to="/location/manchester" />} />
-//             <Route
-//               path="/location/:id"
-//               element={<LiveMeter location={selectedLocation} />}
-//             />
-//           </Routes>
-
-//           <div className="graph-section">
-//             <Graph location={selectedLocation} />
-//             <div className="downloadbuton-container">
-//               <h1>Download InfluxDB Data</h1>
-//               <ButtonServer selectedLocation={selectedLocation} />
-//             </div>
-//             <Events selectedLocation={selectedLocation} />
-//           </div>
-//         </div>
-//       </div>
-//     </Router>
-//   );
-// };
-
-// export default App;
-
-// REARRANGE WEBSITE LAYOUT (VERSION 2.1, 2.2)
+// TIME-BASED DATA PLOT (VERSION 3.1)
 import React, { useState } from "react";
 import {
   BrowserRouter as Router,
@@ -59,7 +9,7 @@ import {
 import Sidebar from "./components/sidebar/Sidebar";
 import GBMap from "./components/map/Map";
 import LiveMeter from "./components/livemeter/LiveMeter";
-import Graph from "./components/graph/GraphPlot";
+import GraphPlot from "./components/graph/GraphPlot"; // Renamed to match file name
 import ButtonServer from "./components/download/Download";
 import Events from "./components/events/Events";
 import "./App.css";
@@ -67,6 +17,7 @@ import "./App.css";
 const App: React.FC = () => {
   const [selectedLocation, setSelectedLocation] =
     useState<string>("manchester");
+  const [totalReadings, setTotalReadings] = useState<number>(0); // ✅ Store totalReadings
 
   return (
     <Router>
@@ -92,12 +43,22 @@ const App: React.FC = () => {
 
           {/* ✅ Right Column: Graph + Events + Download */}
           <div className="right-column">
-            <Graph location={selectedLocation} />
+            {/* ✅ Pass setTotalReadings to Graph so it can update the value */}
+            <GraphPlot
+              location={selectedLocation}
+              setTotalReadings={setTotalReadings}
+            />
+
             <div className="download-button-container">
               <h1>Download InfluxDB Data</h1>
               <ButtonServer selectedLocation={selectedLocation} />
             </div>
-            <Events selectedLocation={selectedLocation} />
+
+            {/* ✅ Pass totalReadings as a prop */}
+            <Events
+              selectedLocation={selectedLocation}
+              totalReadings={totalReadings}
+            />
           </div>
         </div>
       </div>
